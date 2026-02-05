@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Controls from '../../components/Controls';
-import UsersFilterBar from './UsersFilterbar';
 import Pagination from '../../components/Pagination';
+import UsersFilterBar from './UsersFilterBar';
 
 function UserTable({ users, onEdit }) {
   const [activeRole, setActiveRole] = useState('All Users');
