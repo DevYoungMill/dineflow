@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+/* @config content: ['./index.html', './src*.{js,ts,jsx,tsx}']; */
+
+@tailwind utilities;
+
+/* ------------------------------
+   Tailwind v4 Theme Tokens
+-------------------------------- */
+@theme {
+  --color-primary: #f03e3e;
+  --color-secondary: #1b100e;
+
+  --color-background-light: #fbf9f8;
+  --color-background-dark: #211411;
+
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #2c1e1a;
+
+  --font-display: 'Inter', sans-serif;
+  --font-heading: 'Poppins', sans-serif;
+
+  --radius-default: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+/* ------------------------------
+   Custom Utility Mappings
+-------------------------------- */
+@layer utilities {
+  .text-primary {
+    color: var(--color-primary);
+  }
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+
+  .bg-background-light {
+    background-color: var(--color-background-light);
+  }
+  .bg-background-dark {
+    background-color: var(--color-background-dark);
+  }
+
+  .bg-surface-light {
+    background-color: var(--color-surface-light);
+  }
+  .bg-surface-dark {
+    background-color: var(--color-surface-dark);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .rounded-default {
+    border-radius: var(--radius-default);
+  }
+  .rounded-lg {
+    border-radius: var(--radius-lg);
+  }
+  .rounded-xl {
+    border-radius: var(--radius-xl);
+  }
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .rounded-full {
+    border-radius: var(--radius-full);
+  }
+
+  .bg-map-pattern {
+    background-color: #f3f4f6;
+    background-image: linear-gradient(
+        0deg,
+        transparent 24%,
+        #e5e7eb 25%,
+        #e5e7eb 26%,
+        transparent 27%,
+        transparent 74%,
+        #e5e7eb 75%,
+        #e5e7eb 76%,
+        transparent 77%,
+        transparent
+      ),
+      linear-gradient(
+        90deg,
+        transparent 24%,
+        #e5e7eb 25%,
+        #e5e7eb 26%,
+        transparent 27%,
+        transparent 74%,
+        #e5e7eb 75%,
+        #e5e7eb 76%,
+        transparent 77%,
+        transparent
+      );
+    background-size: 50px 50px;
+  }
+}
