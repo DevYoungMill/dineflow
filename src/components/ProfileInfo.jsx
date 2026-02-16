@@ -1,4 +1,16 @@
-function ProfileInfo({ role = 'client' }) {
+import { useUser } from '../context/useUser';
+
+function ProfileInfo() {
+  const { user, fullName, role, avatarUrl } = useUser();
+  const email = user?.email || user?.profile?.email || 'No email';
+  const phone = user?.profile?.phone || 'No phone number';
+  const joinedAt = user?.created_at
+    ? new Date(user.created_at).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+      })
+    : 'Unknown';
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       {/* LEFT PANEL — PROFILE CARD */}
@@ -9,7 +21,7 @@ function ProfileInfo({ role = 'client' }) {
             <div
               className="size-28 rounded-full bg-cover bg-center border-4 border-background-light dark:border-background-dark mx-auto"
               style={{
-                backgroundImage: "url('/profile.png')",
+                backgroundImage: `url('${avatarUrl || '/profile.png'}')`,
               }}
             ></div>
 
@@ -23,7 +35,7 @@ function ProfileInfo({ role = 'client' }) {
           </div>
 
           <h2 className="font-heading text-xl font-bold text-secondary dark:text-white">
-            Alex Morgan
+            {fullName}
           </h2>
 
           <p className="text-xs text-primary font-semibold uppercase tracking-wide">
@@ -31,7 +43,7 @@ function ProfileInfo({ role = 'client' }) {
           </p>
 
           <p className="text-secondary/50 dark:text-gray-400 text-sm mb-4">
-            Member since 2021
+            Member since {joinedAt}
           </p>
 
           <div className="flex flex-col gap-3 text-sm text-left mb-4">
@@ -39,14 +51,14 @@ function ProfileInfo({ role = 'client' }) {
               <span className="material-symbols-outlined text-[18px]">
                 mail
               </span>
-              <span className="truncate">alex.morgan@example.com</span>
+              <span className="truncate">{email}</span>
             </div>
 
             <div className="flex items-center gap-1 text-secondary/70 dark:text-gray-300">
               <span className="material-symbols-outlined text-[18px]">
                 call
               </span>
-              <span>+234 8137025435</span>
+              <span>{phone}</span>
             </div>
           </div>
         </div>
@@ -64,7 +76,8 @@ function ProfileInfo({ role = 'client' }) {
             <label className="text-xs font-bold text-slate-500">Username</label>
             <input
               className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm"
-              placeholder="Alex Morgan"
+              placeholder={fullName}
+              defaultValue={fullName}
             />
           </div>
 
@@ -74,7 +87,7 @@ function ProfileInfo({ role = 'client' }) {
             <input
               disabled
               className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 text-sm cursor-not-allowed"
-              value="alex.morgan@example.com"
+              value={email}
             />
           </div>
 
@@ -83,8 +96,8 @@ function ProfileInfo({ role = 'client' }) {
             <label className="text-xs font-bold text-slate-500">Phone</label>
             <input
               className="mt-2 w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm"
-              placeholder="+234 81 3702 5435"
-              defaultValue={'+234 81 3702 5435'}
+              placeholder={phone}
+              defaultValue={phone}
             />
           </div>
 

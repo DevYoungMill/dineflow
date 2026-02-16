@@ -1,7 +1,7 @@
 import Profile from '../../components/Profile';
 
-function ClientProfile() {
+function AdminProfile() {
   return <Profile />;
 }
 
-export default ClientProfile;
+export default AdminProfile;

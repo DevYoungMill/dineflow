@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import UserOrders from '../../components/UserOrders';
 import UserStats from '../../components/UserStats';
 
@@ -28,9 +29,12 @@ function Dashboard() {
         <h3 class="font-heading text-xl font-bold text-secondary dark:text-white">
           Recent Orders
         </h3>
-        <a class="text-primary text-sm font-semibold hover:underline" href="#">
+        <Link
+          class="text-primary text-sm font-semibold hover:underline"
+          to="/user/orders"
+        >
           View All
-        </a>
+        </Link>
       </div>
       <UserOrders limit={3} />
     </div>

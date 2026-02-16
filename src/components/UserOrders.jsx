@@ -1,6 +1,9 @@
+import { useEffect, useMemo, useState } from 'react';
 import Button from './Button';
+import { useUser } from '../context/useUser';
+import { getOrdersByUser } from '../services/apiOrders';
 
-const orders = [
+const fallbackOrders = [
   {
     id: 1,
     image:
@@ -46,10 +49,72 @@ const orders = [
 ];
 
 function UserOrders({ limit }) {
-  const visibleOrders = limit ? orders.slice(0, limit) : orders;
+  const { user } = useUser();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const load = async () => {
+      if (!user?.id) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const data = await getOrdersByUser(user.id);
+        if (!ignore) setOrders(data || []);
+      } catch {
+        if (!ignore) setOrders([]);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, [user?.id]);
+
+  const normalizedOrders = useMemo(() => {
+    if (!orders.length) return fallbackOrders;
+
+    return orders.map((order, index) => ({
+      id: order.id,
+      image: fallbackOrders[index % fallbackOrders.length].image,
+      date: order.createdAt
+        ? new Date(order.createdAt).toLocaleString()
+        : 'Unknown date',
+      items:
+        order.orderItems?.map((item) => {
+          const raw = item.note || `${order.orderType || 'Order'} item`;
+          const [name] = raw.split(' - ');
+          return `${item.quantity || 1}x ${name}`;
+        }) || [`${order.orderType || 'order'} request`],
+      total: `$${Number(order.totalAmount || 0).toFixed(2)}`,
+      status: String(order.status || 'pending')
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, (char) => char.toUpperCase()),
+    }));
+  }, [orders]);
+
+  const visibleOrders = loading
+    ? []
+    : limit
+      ? normalizedOrders.slice(0, limit)
+      : normalizedOrders;
 
   return (
     <div className="flex flex-col gap-4">
+      {loading ? (
+        <div className="rounded-xl border border-gray-100 bg-white p-6 text-sm text-secondary/60 dark:border-white/5 dark:bg-surface-dark dark:text-gray-400">
+          Loading orders...
+        </div>
+      ) : null}
+
       {visibleOrders.map((order) => {
         const [mainItem, ...otherItems] = order.items;
 

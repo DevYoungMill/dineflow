@@ -1,12 +1,57 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import SpinnerMini from '../components/SpinnerMini';
+import { getCurrentUserWithProfile, signIn } from '../services/apiAuth';
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const onChange = (event) => {
+    const { name, value } = event.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+
+    if (!form.email.trim()) {
+      setError('Email is required.');
+      return;
+    }
+    if (!form.password) {
+      setError('Password is required.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await signIn(form.email.trim(), form.password);
+      const currentUser = await getCurrentUserWithProfile();
+      const role = currentUser?.profile?.role?.toLowerCase();
+
+      if (role === 'admin') {
+        navigate('/admin/dashboard');
+        return;
+      }
+
+      navigate('/user/dashboard');
+    } catch (err) {
+      setError(err?.message || 'Unable to sign in.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-background-light dark:bg-background-dark">
       {/* Background Blobs */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl opacity-50"></div>
-        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-secondary/5 dark:bg-primary/5 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute -top-40 -right-40 w-150 h-150 bg-primary/5 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute -bottom-40 -left-40 w-150 h-150 bg-secondary/5 dark:bg-primary/5 rounded-full blur-3xl opacity-50"></div>
       </div>
 
       {/* Logo */}
@@ -29,7 +74,7 @@ export default function Login() {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={onSubmit}>
           {/* Email */}
           <div className="space-y-1">
             <label className="block text-sm font-semibold text-secondary dark:text-gray-300">
@@ -43,6 +88,9 @@ export default function Login() {
               </div>
               <input
                 type="email"
+                name="email"
+                value={form.email}
+                onChange={onChange}
                 placeholder="you@example.com"
                 className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-white/10 rounded-xl bg-background-light dark:bg-black/20 text-secondary dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
               />
@@ -71,18 +119,26 @@ export default function Login() {
               </div>
               <input
                 type="password"
+                name="password"
+                value={form.password}
+                onChange={onChange}
                 placeholder="••••••••"
                 className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-white/10 rounded-xl bg-background-light dark:bg-black/20 text-secondary dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
               />
             </div>
           </div>
 
+          {error ? (
+            <div className="text-xs text-red-500 font-medium">{error}</div>
+          ) : null}
+
           {/* Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full py-3 px-4 rounded-xl shadow-lg shadow-primary/20 text-sm font-bold text-white bg-primary hover:bg-primary/90 focus:ring-2 focus:ring-primary transition-all duration-200 hover:-translate-y-0.5"
           >
-            Sign In
+            {loading ? <SpinnerMini /> : 'Sign In'}
           </button>
         </form>
 
@@ -102,7 +158,10 @@ export default function Login() {
           {/* Social Signup */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             {/* Google */}
-            <button className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-white/5 text-sm font-medium transition-colors text-secondary dark:text-white">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-white/5 text-sm font-medium transition-colors text-secondary dark:text-white"
+            >
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -125,7 +184,10 @@ export default function Login() {
             </button>
 
             {/* Facebook */}
-            <button className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-white/10 bg-[#1877F2] hover:bg-[#1864D9] text-white text-sm font-medium transition-colors">
+            <button
+              type="button"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-white/10 bg-[#1877F2] hover:bg-[#1864D9] text-white text-sm font-medium transition-colors"
+            >
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>

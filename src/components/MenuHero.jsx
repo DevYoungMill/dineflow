@@ -1,4 +1,11 @@
-function MenuHero() {
+function MenuHero({ selectedCategory, onCategoryChange }) {
+  const categoryTabs = [
+    { label: 'All', value: 'All' },
+    { label: 'Popular', value: 'Popular Items' },
+    { label: 'Main Courses', value: 'Main Courses' },
+    { label: 'Desserts', value: 'Desserts' },
+  ];
+
   return (
     <>
       <section className="relative h-75 lg:h-75 w-full ">
@@ -74,24 +81,22 @@ function MenuHero() {
       <div className="sticky top-18.25 z-40 bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-white/5 shadow-sm">
         <div className="px-4 lg:px-10 flex justify-center">
           <div className="w-full flex items-center gap-1 overflow-x-auto no-scrollbar py-2">
-            <button className="px-4 py-2 rounded-full bg-secondary text-white font-bold text-sm whitespace-nowrap shadow-lg shadow-secondary/20">
-              Popular
-            </button>
-            <button className="px-4 py-2 rounded-full text-secondary/70 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium text-sm whitespace-nowrap transition-colors">
-              Appetizers
-            </button>
-            <button className="px-4 py-2 rounded-full text-secondary/70 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium text-sm whitespace-nowrap transition-colors">
-              Main Courses
-            </button>
-            <button className="px-4 py-2 rounded-full text-secondary/70 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium text-sm whitespace-nowrap transition-colors">
-              Bowls &amp; Salads
-            </button>
-            <button className="px-4 py-2 rounded-full text-secondary/70 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium text-sm whitespace-nowrap transition-colors">
-              Desserts
-            </button>
-            <button className="px-4 py-2 rounded-full text-secondary/70 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium text-sm whitespace-nowrap transition-colors">
-              Beverages
-            </button>
+            {categoryTabs.map((tab) => {
+              const isActive = selectedCategory === tab.value;
+              return (
+                <button
+                  key={tab.value}
+                  onClick={() => onCategoryChange(tab.value)}
+                  className={
+                    isActive
+                      ? 'px-4 py-2 rounded-full bg-secondary text-white font-bold text-sm whitespace-nowrap shadow-lg shadow-secondary/20'
+                      : 'px-4 py-2 rounded-full text-secondary/70 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 font-medium text-sm whitespace-nowrap transition-colors cursor-pointer'
+                  }
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

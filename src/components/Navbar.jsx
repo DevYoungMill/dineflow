@@ -8,7 +8,7 @@ export default function Navbar() {
   const links = [
     { name: 'Menu', path: '/menu', icon: 'restaurant_menu' },
     { name: 'About Us', path: '/about', icon: 'info' },
-    { name: 'Checkout', path: '/checkout', icon: 'shopping_cart' },
+    { name: 'Checkout', path: '/checkout', icon: 'shopping_bag' },
     { name: 'Tracking', path: '/tracking', icon: 'bike_lane' },
   ];
 
@@ -18,7 +18,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between w-full">
           {/* Logo */}
           <NavLink to="/">
-            <img src="dineflow.png" alt="DineFlow Logo" width="150" />
+            <img src="/dineflow.png" alt="DineFlow Logo" width="150" />
           </NavLink>
 
           {/* Desktop Menu (from md) */}

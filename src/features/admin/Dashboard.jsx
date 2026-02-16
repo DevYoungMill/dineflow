@@ -1,6 +1,26 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { runDraftAction } from '../../services/apiOrders';
 
 export default function AdminDashboard() {
+  const [draftLoading, setDraftLoading] = useState(false);
+  const [draftMessage, setDraftMessage] = useState('');
+
+  const handleDraftAction = async () => {
+    try {
+      setDraftLoading(true);
+      setDraftMessage('');
+      const result = await runDraftAction();
+      setDraftMessage(
+        `Draft inserted: ${result.inserted} orders, ${result.insertedItems} items (${result.mappedProfiles} profiles).`,
+      );
+    } catch (error) {
+      setDraftMessage(error?.message || 'Draft action failed.');
+    } finally {
+      setDraftLoading(false);
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto p-6 lg:p-10 scroll-smooth">
       {/* Page Header */}
@@ -526,6 +546,24 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
+      </div>
+
+      {/* Temporary Draft Action (remove/comment later) */}
+      <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2">
+        {draftMessage ? (
+          <div className="max-w-xs rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
+            {draftMessage}
+          </div>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={handleDraftAction}
+          disabled={draftLoading}
+          className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {draftLoading ? 'Running...' : 'Draft Action'}
+        </button>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import ProfileInfo from '../../components/ProfileInfo';
+import ProfileInfo from './ProfileInfo';
 
 function Profile() {
   return (
