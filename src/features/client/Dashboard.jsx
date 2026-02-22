@@ -1,8 +1,12 @@
 import { Link } from 'react-router-dom';
 import UserOrders from '../../components/UserOrders';
 import UserStats from '../../components/UserStats';
+import { useUser } from '../../context/useUser';
 
 function Dashboard() {
+  const { fullName } = useUser();
+  const firstName = (fullName || 'User').trim().split(/\s+/)[0] || 'User';
+
   return (
     <div className="flex-1 overflow-y-auto p-6 lg:p-10 scroll-smooth">
       {/* Page Header */}
@@ -16,8 +20,8 @@ function Dashboard() {
             <span className="text-primary font-medium">Home</span>
           </div>
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 dark:text-white mb-1">
-            Welcome back, <span className="text-primary">Alex!</span> Here’s a
-            quick look at your appetite.
+            Welcome back, <span className="text-primary">{firstName}!</span>{' '}
+            Here's a quick look at your appetite.
           </h2>
         </div>
       </div>
