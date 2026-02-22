@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import Button from './Button';
 import { useUser } from '../context/useUser';
-import { getOrdersByUser } from '../services/apiOrders';
+import { getClientOrders } from '../services/apiOrders';
 
 const fallbackOrders = [
   {
@@ -64,7 +63,10 @@ function UserOrders({ limit }) {
 
       try {
         setLoading(true);
-        const data = await getOrdersByUser(user.id);
+        const data = await getClientOrders({
+          userId: user.id,
+          email: user?.profile?.email || user?.email || '',
+        });
         if (!ignore) setOrders(data || []);
       } catch {
         if (!ignore) setOrders([]);
@@ -77,7 +79,7 @@ function UserOrders({ limit }) {
     return () => {
       ignore = true;
     };
-  }, [user?.id]);
+  }, [user?.email, user?.id, user?.profile?.email]);
 
   const normalizedOrders = useMemo(() => {
     if (!orders.length) return fallbackOrders;

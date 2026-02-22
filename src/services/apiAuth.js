@@ -1,4 +1,5 @@
 import supabase from './supabase';
+import { claimGuestOrdersByEmail } from './apiOrders';
 
 export const signUp = async ({
   fullName,
@@ -53,6 +54,11 @@ export const signUp = async ({
   ]);
 
   if (profileError) throw profileError;
+  try {
+    await claimGuestOrdersByEmail({ email, userId: user.id });
+  } catch {
+    // Non-blocking: dashboard query also includes email fallback.
+  }
 
   return authData;
 };
@@ -96,6 +102,15 @@ export const getCurrentUserWithProfile = async () => {
     .single();
 
   if (error) throw error;
+
+  try {
+    await claimGuestOrdersByEmail({
+      email: profile?.email || user.email,
+      userId: user.id,
+    });
+  } catch {
+    // Non-blocking: dashboard query also includes email fallback.
+  }
 
   return {
     ...user,

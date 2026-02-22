@@ -57,7 +57,7 @@ export default function Login() {
       {/* Logo */}
       <div className="relative z-10 mb-8 flex items-center justify-center gap-3">
         <Link to="/">
-          <img src="dineflow.png" alt="DineFlow Logo" width="150" />
+          <img src="/dineflow.png" alt="DineFlow Logo" width="150" />
         </Link>
       </div>
 
