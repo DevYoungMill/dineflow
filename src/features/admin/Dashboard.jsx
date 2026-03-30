@@ -44,7 +44,7 @@ export default function AdminDashboard() {
           </span>
           <div className="flex items-center bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 cursor-pointer shadow-sm">
             <span className="text-sm font-medium mr-2 dark:text-slate-200">
-              Oct 1 - Oct 31
+              Mar 1 - Mar 31
             </span>
             <span className="material-icons-round text-slate-400 text-sm">
               calendar_today
